@@ -1,0 +1,8 @@
+/coverage
+/logs
+/node_modules
+/deploy
+/storage
+/configs/service-account-file.json
+.env
+*.log

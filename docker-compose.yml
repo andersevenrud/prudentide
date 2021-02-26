@@ -1,0 +1,69 @@
+version: '3'
+
+services:
+  db:
+    image: "mysql:8"
+    restart: "${DOCKER_RESTART_POLICY:-no}"
+    command: --default-authentication-plugin=mysql_native_password
+    volumes:
+      - db_data:/var/lib/mysql:rw
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DOCKER_DB_ROOT_PASSWORD:-prudentide}
+      MYSQL_DATABASE: ${DB_DATABASE:-prudentide}
+      MYSQL_USER: ${DB_USERNAME:-prudentide}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-prudentide}
+      MYSQL_ROOT_HOST: '%'
+
+  mq:
+    image: "redis:latest"
+    restart: "${DOCKER_RESTART_POLICY:-no}"
+    volumes:
+      - redis_data:/data
+
+  cache:
+    image: "redis:latest"
+    restart: "${DOCKER_RESTART_POLICY:-no}"
+
+  mailhog:
+    image: mailhog/mailhog
+    ports:
+      - ${DOCKER_MAILHOG_PORT:-8081}:8025
+    logging:
+      driver: none
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DOCKER_DB_ROOT_PASSWORD:-prudentide}
+      PMA_USER: ${DB_USERNAM:-prudentide}
+      PMA_PASSWORD: ${DB_PASSWORD:-prudentide}
+      UPLOAD_SIZE: 2G
+    ports:
+      - ${DOCKER_PHPMYADMIN_PORT:-8082}:80
+
+  api:
+    build: .
+    restart: "${DOCKER_RESTART_POLICY:-no}"
+    command: scripts/entrypoint.sh
+    working_dir: /usr/src/prudentide
+    environment:
+      WINSTON_SERVICE: api
+      GOOGLE_APPLICATION_CREDENTIALS: /usr/src/prudentide/configs/service-account-file.json
+      MQ_FOREGROUND: "true"
+    env_file:
+      - "./.env"
+    depends_on:
+      - db
+      - mq
+      - cache
+      - mailhog
+    volumes:
+      - "./:/usr/src/prudentide"
+      - "storage_data:/usr/src/prudentide/storage"
+    ports:
+      - ${DOCKER_APP_PORT:-8080}:${APP_PORT:-8080}
+
+volumes:
+  db_data: {}
+  redis_data: {}
+  storage_data: {}

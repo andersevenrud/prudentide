@@ -1,0 +1,3488 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Prudentide API Documentation",
+    "description": "OpenAPI documentation for the Prudentide API",
+    "version": "1.0",
+    "contact": {
+      "name": "Anders Evenrud",
+      "email": "andersevenrud@gmail.com"
+    }
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8080"
+    }
+  ],
+  "security": [
+    {
+      "jwt": []
+    },
+    {
+      "auth0": []
+    }
+  ],
+  "tags": [
+    {
+      "name": "health",
+      "description": "Health endpoints"
+    },
+    {
+      "name": "search",
+      "description": "Search endpoints"
+    },
+    {
+      "name": "me",
+      "description": "User session"
+    },
+    {
+      "name": "group",
+      "description": "Group operations"
+    },
+    {
+      "name": "user",
+      "description": "User operations"
+    },
+    {
+      "name": "project",
+      "description": "Project operations"
+    },
+    {
+      "name": "project webhook",
+      "description": "Project webhook operations"
+    },
+    {
+      "name": "project label",
+      "description": "Project label operations"
+    },
+    {
+      "name": "project milestone",
+      "description": "Project milestone operations"
+    },
+    {
+      "name": "task",
+      "description": "Task operations"
+    },
+    {
+      "name": "task attachment",
+      "description": "Task attachment operations"
+    },
+    {
+      "name": "task action",
+      "description": "Task action operations"
+    },
+    {
+      "name": "task watcher",
+      "description": "Task watching operation"
+    },
+    {
+      "name": "task comment",
+      "description": "Task comment operations"
+    }
+  ],
+  "paths": {
+    "/v1/health": {
+      "get": {
+        "operationId": "checkHealth",
+        "summary": "Check system health",
+        "security": [],
+        "tags": [
+          "health"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Not OK"
+          }
+        }
+      }
+    },
+    "/v1/me/task": {
+      "get": {
+        "operationId": "getMyTasks",
+        "summary": "List my tasks",
+        "tags": [
+          "me"
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/tasks"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          }
+        }
+      }
+    },
+    "/v1/me/device/{device}": {
+      "delete": {
+        "operationId": "removeMyDevice",
+        "summary": "Unregister a device",
+        "tags": [
+          "me"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/device"
+          }
+        ],
+        "responses": {
+          "204": {
+            "$ref": "#/components/responses/204"
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          }
+        }
+      }
+    },
+    "/v1/me/device": {
+      "post": {
+        "operationId": "addMyDevice",
+        "summary": "Register device",
+        "tags": [
+          "me"
+        ],
+        "requestBody": {
+          "$ref": "#/components/requestBodies/postUserDevice"
+        },
+        "responses": {
+          "201": {
+            "$ref": "#/components/responses/postUserDevice"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "422": {
+            "$ref": "#/components/responses/422"
+          }
+        }
+      }
+    },
+    "/v1/me/profile": {
+      "get": {
+        "operationId": "getMyProfile",
+        "summary": "View my profile",
+        "tags": [
+          "me"
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/getUserProfile"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          }
+        }
+      },
+      "put": {
+        "operationId": "updateMyProfile",
+        "summary": "Update my profile",
+        "tags": [
+          "me"
+        ],
+        "requestBody": {
+          "$ref": "#/components/requestBodies/putUserProfile"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/putUserProfile"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "422": {
+            "$ref": "#/components/responses/422"
+          }
+        }
+      }
+    },
+    "/v1/me/avatar": {
+      "put": {
+        "operationId": "updateMyAvatar",
+        "summary": "Update my avatar",
+        "tags": [
+          "me"
+        ],
+        "requestBody": {
+          "$ref": "#/components/requestBodies/putAvatar"
+        },
+        "responses": {
+          "204": {
+            "$ref": "#/components/responses/204"
+          },
+          "422": {
+            "$ref": "#/components/responses/422"
+          }
+        }
+      }
+    },
+    "/v1/group": {
+      "get": {
+        "operationId": "getGroups",
+        "summary": "Lists groups",
+        "tags": [
+          "group"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/parentId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/getGroup"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          }
+        }
+      },
+      "post": {
+        "operationId": "addGroup",
+        "summary": "Create group",
+        "tags": [
+          "group"
+        ],
+        "requestBody": {
+          "$ref": "#/components/requestBodies/postGroup"
+        },
+        "responses": {
+          "201": {
+            "$ref": "#/components/responses/getGroup"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "422": {
+            "$ref": "#/components/responses/422"
+          }
+        }
+      }
+    },
+    "/v1/group/{group}": {
+      "get": {
+        "operationId": "getGroup",
+        "summary": "View group",
+        "tags": [
+          "group"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/group"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/getGroup"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "422": {
+            "$ref": "#/components/responses/422"
+          }
+        }
+      },
+      "put": {
+        "operationId": "updateGroup",
+        "summary": "Update group",
+        "tags": [
+          "group"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/group"
+          },
+          {
+            "$ref": "#/components/parameters/conflictCheck"
+          }
+        ],
+        "requestBody": {
+          "$ref": "#/components/requestBodies/putGroup"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/getGroup"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "409": {
+            "$ref": "#/components/responses/409"
+          },
+          "422": {
+            "$ref": "#/components/responses/422"
+           }
+        }
+      }
+    },
+    "/v1/user/{user}": {
+      "get": {
+        "operationId": "getUser",
+        "summary": "Gets user profile",
+        "tags": [
+          "user"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/user"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/getUser"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          }
+        }
+      }
+    },
+    "/v1/user/{user}/avatar": {
+      "get": {
+        "operationId": "getUserAvatar",
+        "summary": "Gets user avatar",
+        "security": [],
+        "tags": [
+          "user"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/user"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/getAvatar"
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          }
+        }
+      }
+    },
+    "/v1/project": {
+      "get": {
+        "operationId": "getProjects",
+        "summary": "Lists projects",
+        "tags": [
+          "project"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/usersFilter"
+          },
+          {
+            "$ref": "#/components/parameters/groupsFilter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/getProjects"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          }
+        }
+      },
+      "post": {
+        "operationId": "addProject",
+        "summary": "Create project",
+        "tags": [
+          "project"
+        ],
+        "requestBody": {
+          "$ref": "#/components/requestBodies/postProject"
+        },
+        "responses": {
+          "201": {
+            "$ref": "#/components/responses/project"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "422": {
+            "$ref": "#/components/responses/422"
+          }
+        }
+      }
+    },
+    "/v1/project/{project}/archive": {
+      "summary": "Archives a project",
+      "post": {
+        "operationId": "arhiveProject",
+        "tags": [
+          "project"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/project"
+          },
+          {
+            "$ref": "#/components/parameters/conflictCheck"
+          }
+        ],
+        "responses": {
+          "204": {
+            "$ref": "#/components/responses/204"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "409": {
+            "$ref": "#/components/responses/409"
+          },
+          "422": {
+            "$ref": "#/components/responses/422"
+          }
+        }
+      },
+      "delete": {
+        "operationId": "unarhiveProject",
+        "summary": "Unarchives a project",
+        "tags": [
+          "project"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/project"
+          },
+          {
+            "$ref": "#/components/parameters/conflictCheck"
+          }
+        ],
+        "responses": {
+          "204": {
+            "$ref": "#/components/responses/204"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "409": {
+            "$ref": "#/components/responses/409"
+          },
+          "422": {
+            "$ref": "#/components/responses/422"
+          }
+        }
+      }
+    },
+    "/v1/project/{project}": {
+      "get": {
+        "operationId": "getProject",
+        "summary": "View a project",
+        "tags": [
+          "project"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/project"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/project"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "422": {
+            "$ref": "#/components/responses/422"
+          }
+        }
+      },
+      "put": {
+        "operationId": "updateProject",
+        "summary": "Update project",
+        "tags": [
+          "project"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/project"
+          },
+          {
+            "$ref": "#/components/parameters/conflictCheck"
+          }
+        ],
+        "requestBody": {
+          "$ref": "#/components/requestBodies/putProject"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/project"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "409": {
+            "$ref": "#/components/responses/409"
+          },
+          "422": {
+            "$ref": "#/components/responses/422"
+          }
+        }
+      }
+    },
+    "/v1/project/{project}/webhook": {
+      "get": {
+        "operationId": "getWebhooks",
+        "summary": "Lists project webhooks",
+        "tags": [
+          "project webhook"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/project"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/getWebhooks"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "422": {
+            "$ref": "#/components/responses/422"
+          }
+        }
+      },
+      "post": {
+        "operationId": "addWebhook",
+        "summary": "Create webhook",
+        "tags": [
+          "project webhook"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/project"
+          }
+        ],
+        "requestBody": {
+          "$ref": "#/components/requestBodies/postWebhook"
+        },
+        "responses": {
+          "201": {
+            "$ref": "#/components/responses/postOrPutWebhook"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "422": {
+            "$ref": "#/components/responses/422"
+          }
+        }
+      }
+    },
+    "/v1/project/{project}/webhook/{webhook}": {
+      "put": {
+        "operationId": "updateWebhook",
+        "summary": "Update webhook",
+        "tags": [
+          "project webhook"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/project"
+          },
+          {
+            "$ref": "#/components/parameters/webhook"
+          },
+          {
+            "$ref": "#/components/parameters/conflictCheck"
+          }
+        ],
+        "requestBody": {
+          "$ref": "#/components/requestBodies/putWebhook"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/postOrPutWebhook"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "409": {
+            "$ref": "#/components/responses/409"
+          },
+          "422": {
+            "$ref": "#/components/responses/422"
+          }
+        }
+      },
+      "delete": {
+        "operationId": "deleteWebhook",
+        "summary": "Delete webhook",
+        "tags": [
+          "project webhook"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/project"
+          },
+          {
+            "$ref": "#/components/parameters/webhook"
+          }
+        ],
+        "responses": {
+          "204": {
+            "$ref": "#/components/responses/204"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "422": {
+            "$ref": "#/components/responses/422"
+          }
+        }
+      }
+    },
+    "/v1/project/{project}/label": {
+      "get": {
+        "operationId": "getProjectLabels",
+        "summary": "View project labels",
+        "tags": [
+          "project label"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/project"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/getLabels"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "422": {
+            "$ref": "#/components/responses/422"
+          }
+        }
+      },
+      "post": {
+        "operationId": "addProjectLabel",
+        "summary": "Create project label",
+        "tags": [
+          "project label"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/project"
+          }
+        ],
+        "requestBody": {
+          "$ref": "#/components/requestBodies/postProjectLabel"
+        },
+        "responses": {
+          "201": {
+            "$ref": "#/components/responses/postOrPutProjectLabel"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "422": {
+            "$ref": "#/components/responses/422"
+          }
+        }
+      }
+    },
+    "/v1/project/{project}/label/{label}": {
+      "put": {
+        "operationId": "updateProjectLabel",
+        "summary": "Update project label",
+        "tags": [
+          "project label"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/project"
+          },
+          {
+            "$ref": "#/components/parameters/label"
+          },
+          {
+            "$ref": "#/components/parameters/conflictCheck"
+          }
+        ],
+        "requestBody": {
+          "$ref": "#/components/requestBodies/putProjectLabel"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/postOrPutProjectLabel"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "409": {
+            "$ref": "#/components/responses/409"
+          },
+          "422": {
+            "$ref": "#/components/responses/422"
+          }
+        }
+      },
+      "delete": {
+        "operationId": "deleteProjectLabel",
+        "summary": "Delete project label",
+        "tags": [
+          "project label"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/project"
+          },
+          {
+            "$ref": "#/components/parameters/label"
+          }
+        ],
+        "responses": {
+          "204": {
+            "$ref": "#/components/responses/204"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "422": {
+            "$ref": "#/components/responses/422"
+          }
+        }
+      }
+    },
+    "/v1/project/{project}/milestone": {
+      "get": {
+        "operationId": "getProjectMilestones",
+        "summary": "List project milestones",
+        "tags": [
+          "project milestone"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/project"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/getMilestones"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "422": {
+            "$ref": "#/components/responses/422"
+          }
+        }
+      },
+      "post": {
+        "operationId": "addProjectMilestone",
+        "summary": "Create project milestone",
+        "tags": [
+          "project milestone"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/project"
+          }
+        ],
+        "requestBody": {
+          "$ref": "#/components/requestBodies/postProjectMilestone"
+        },
+        "responses": {
+          "201": {
+            "$ref": "#/components/responses/postOrPutProjectMilestone"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "422": {
+            "$ref": "#/components/responses/422"
+          }
+        }
+      }
+    },
+    "/v1/project/{project}/milestone/{milestone}": {
+      "get": {
+        "operationId": "getProjectMilestone",
+        "summary": "View project milestone",
+        "tags": [
+          "project milestone"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/project"
+          },
+          {
+            "$ref": "#/components/parameters/milestone"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/getMilestone"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "409": {
+            "$ref": "#/components/responses/409"
+          },
+          "422": {
+            "$ref": "#/components/responses/422"
+          }
+        }
+      },
+      "put": {
+        "operationId": "updateProjectMilestone",
+        "summary": "Update project milestone",
+        "tags": [
+          "project milestone"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/project"
+          },
+          {
+            "$ref": "#/components/parameters/milestone"
+          },
+          {
+            "$ref": "#/components/parameters/conflictCheck"
+          }
+        ],
+        "requestBody": {
+          "$ref": "#/components/requestBodies/putProjectMilestone"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/postOrPutProjectMilestone"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "409": {
+            "$ref": "#/components/responses/409"
+          },
+          "422": {
+            "$ref": "#/components/responses/422"
+          }
+        }
+      },
+      "delete": {
+        "operationId": "deleteProjectMilestone",
+        "summary": "Delete project milestone",
+        "tags": [
+          "project milestone"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/project"
+          },
+          {
+            "$ref": "#/components/parameters/milestone"
+          }
+        ],
+        "responses": {
+          "204": {
+            "$ref": "#/components/responses/204"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "422": {
+            "$ref": "#/components/responses/422"
+          }
+        }
+      }
+    },
+    "/v1/project/{project}/task": {
+      "get": {
+        "operationId": "getTasks",
+        "summary": "List project tasks",
+        "tags": [
+          "project"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/project"
+          },
+          {
+            "$ref": "#/components/parameters/usersFilter"
+          },
+          {
+            "$ref": "#/components/parameters/assignedUserIdsFilter"
+          },
+          {
+            "$ref": "#/components/parameters/milestonesFilter"
+          },
+          {
+            "$ref": "#/components/parameters/labelsFilter"
+          },
+          {
+            "$ref": "#/components/parameters/statusFilter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/tasks"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "422": {
+            "$ref": "#/components/responses/422"
+          }
+        }
+      }
+    },
+    "/v1/task": {
+      "post": {
+        "operationId": "addTask",
+        "summary": "Create project task",
+        "tags": [
+          "task"
+        ],
+        "requestBody": {
+          "$ref": "#/components/requestBodies/postTask"
+        },
+        "responses": {
+          "201": {
+            "$ref": "#/components/responses/postOrPutTask"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "422": {
+            "$ref": "#/components/responses/422"
+          }
+        }
+      }
+    },
+    "/v1/task/{task}/close": {
+      "post": {
+        "operationId": "closeTask",
+        "summary": "Closes project task",
+        "tags": [
+          "task"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/task"
+          }
+        ],
+        "responses": {
+          "204": {
+            "$ref": "#/components/responses/204"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          }
+        }
+      }
+    },
+    "/v1/task/{task}/open": {
+      "post": {
+        "operationId": "openTask",
+        "summary": "(Re)open project task",
+        "tags": [
+          "task"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/task"
+          }
+        ],
+        "responses": {
+          "204": {
+            "$ref": "#/components/responses/204"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          }
+        }
+      }
+    },
+    "/v1/task/{task}/attachment": {
+      "get": {
+        "operationId": "getTaskAttachments",
+        "summary": "View project task attachments",
+        "tags": [
+          "task attachment"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/task"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/getAttachments"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "422": {
+            "$ref": "#/components/responses/422"
+          }
+        }
+      },
+      "post": {
+        "operationId": "addTaskAttachment",
+        "summary": "Creates project task attachment",
+        "tags": [
+          "task attachment"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/task"
+          }
+        ],
+        "requestBody": {
+          "$ref": "#/components/requestBodies/postAttachment"
+        },
+        "responses": {
+          "201": {
+            "$ref": "#/components/responses/postAttachment"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "422": {
+            "$ref": "#/components/responses/422"
+          }
+        }
+      }
+    },
+    "/v1/task/{task}/attachment/{attachment}": {
+      "get": {
+        "operationId": "getTaskAttachment",
+        "summary": "Fetch project task attachment",
+        "tags": [
+          "task attachment"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/task"
+          },
+          {
+            "$ref": "#/components/parameters/attachment"
+          },
+          {
+            "$ref": "#/components/parameters/download"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/getAttachment"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "422": {
+            "$ref": "#/components/responses/422"
+          }
+        }
+      },
+      "delete": {
+        "operationId": "deleteTaskAttachment",
+        "summary": "Delete project task attachment",
+        "tags": [
+          "task attachment"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/task"
+          },
+          {
+            "$ref": "#/components/parameters/attachment"
+          }
+        ],
+        "responses": {
+          "204": {
+            "$ref": "#/components/responses/204"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "422": {
+            "$ref": "#/components/responses/422"
+          }
+        }
+      }
+    },
+    "/v1/task/{task}/action": {
+      "get": {
+        "operationId": "getTaskActions",
+        "summary": "View project task actions",
+        "tags": [
+          "task action"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/task"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/getActions"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "422": {
+            "$ref": "#/components/responses/422"
+          }
+        }
+      },
+      "post": {
+        "operationId": "addTaskAction",
+        "summary": "Creates project task action",
+        "tags": [
+          "task action"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/task"
+          }
+        ],
+        "requestBody": {
+          "$ref": "#/components/requestBodies/postAction"
+        },
+        "responses": {
+          "201": {
+            "$ref": "#/components/responses/postOrPutAction"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "422": {
+            "$ref": "#/components/responses/422"
+          }
+        }
+      }
+    },
+    "/v1/task/{task}/action/{action}": {
+      "put": {
+        "operationId": "updateTaskAction",
+        "summary": "Update project task action",
+        "tags": [
+          "task action"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/task"
+          },
+          {
+            "$ref": "#/components/parameters/action"
+          }
+        ],
+        "requestBody": {
+          "$ref": "#/components/requestBodies/putAction"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/postOrPutAction"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "422": {
+            "$ref": "#/components/responses/422"
+          }
+        }
+      },
+      "delete": {
+        "operationId": "deleteTaskAction",
+        "summary": "Delete project task action",
+        "tags": [
+          "task action"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/task"
+          },
+          {
+            "$ref": "#/components/parameters/action"
+          }
+        ],
+        "responses": {
+          "204": {
+            "$ref": "#/components/responses/204"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "422": {
+            "$ref": "#/components/responses/422"
+          }
+        }
+      }
+    },
+    "/v1/task/{task}/watch": {
+      "get": {
+        "operationId": "getTaskWatchers",
+        "summary": "View project task watchers",
+        "tags": [
+          "task watcher"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/task"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/getTaskWatchers"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "422": {
+            "$ref": "#/components/responses/422"
+          }
+        }
+      },
+      "post": {
+        "operationId": "watchTask",
+        "summary": "Watch project task",
+        "tags": [
+          "task watcher"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/task"
+          }
+        ],
+        "responses": {
+          "204": {
+            "$ref": "#/components/responses/204"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "422": {
+            "$ref": "#/components/responses/422"
+          }
+        }
+      },
+      "delete": {
+        "operationId": "unwatchTask",
+        "summary": "Unwatch project task",
+        "tags": [
+          "task watcher"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/task"
+          }
+        ],
+        "responses": {
+          "204": {
+            "$ref": "#/components/responses/204"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "422": {
+            "$ref": "#/components/responses/422"
+          }
+        }
+      }
+    },
+    "/v1/task/{task}/comment": {
+      "get": {
+        "operationId": "getTaskComments",
+        "summary": "View project task comments",
+        "tags": [
+          "task comment"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/task"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/getComments"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "422": {
+            "$ref": "#/components/responses/422"
+          }
+        }
+      },
+      "post": {
+        "operationId": "addTaskComment",
+        "summary": "Create task comment",
+        "tags": [
+          "task comment"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/task"
+          }
+        ],
+        "requestBody": {
+          "$ref": "#/components/requestBodies/postComment"
+        },
+        "responses": {
+          "201": {
+            "$ref": "#/components/responses/postOrPutComment"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "422": {
+            "$ref": "#/components/responses/422"
+          }
+        }
+      }
+    },
+    "/v1/task/{task}/comment/{comment}/stick": {
+      "post": {
+        "operationId": "stickTaskComment",
+        "summary": "Sticky a task comment",
+        "tags": [
+          "task comment"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/task"
+          },
+          {
+            "$ref": "#/components/parameters/comment"
+          },
+          {
+            "$ref": "#/components/parameters/conflictCheck"
+          }
+        ],
+        "responses": {
+          "204": {
+            "$ref": "#/components/responses/204"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "409": {
+            "$ref": "#/components/responses/409"
+          },
+          "422": {
+            "$ref": "#/components/responses/422"
+          }
+        }
+      },
+      "delete": {
+        "operationId": "unstickTaskComment",
+        "summary": "Unsticky a task comment",
+        "tags": [
+          "task comment"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/task"
+          },
+          {
+            "$ref": "#/components/parameters/comment"
+          },
+          {
+            "$ref": "#/components/parameters/conflictCheck"
+          }
+        ],
+        "responses": {
+          "204": {
+            "$ref": "#/components/responses/204"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "409": {
+            "$ref": "#/components/responses/409"
+          },
+          "422": {
+            "$ref": "#/components/responses/422"
+          }
+        }
+      }
+    },
+    "/v1/task/{task}/comment/{comment}": {
+      "put": {
+        "operationId": "updateTaskComment",
+        "summary": "Update project task comment",
+        "tags": [
+          "task comment"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/task"
+          },
+          {
+            "$ref": "#/components/parameters/comment"
+          },
+          {
+            "$ref": "#/components/parameters/conflictCheck"
+          }
+        ],
+        "requestBody": {
+          "$ref": "#/components/requestBodies/putComment"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/postOrPutComment"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "409": {
+            "$ref": "#/components/responses/409"
+          },
+          "422": {
+            "$ref": "#/components/responses/422"
+          }
+        }
+      }
+    },
+    "/v1/task/{task}": {
+      "put": {
+        "operationId": "updateTask",
+        "summary": "Update project task",
+        "tags": [
+          "task"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/task"
+          },
+          {
+            "$ref": "#/components/parameters/conflictCheck"
+          }
+        ],
+        "requestBody": {
+          "$ref": "#/components/requestBodies/putTask"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/postOrPutTask"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "409": {
+            "$ref": "#/components/responses/409"
+          },
+          "422": {
+            "$ref": "#/components/responses/422"
+          }
+        }
+      },
+      "get": {
+        "operationId": "getTask",
+        "summary": "View project task",
+        "tags": [
+          "task"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/task"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/getTask"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "422": {
+            "$ref": "#/components/responses/422"
+          }
+        }
+      }
+    },
+    "/v1/search": {
+      "get": {
+        "operationId": "search",
+        "summary": "Search",
+        "tags": [
+          "search"
+        ],
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 255
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "pattern": "^\\d+$"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "pattern": "^\\d+$"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SearchResult"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "422": {
+            "$ref": "#/components/responses/422"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ValidationResult": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/ErrorResult"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "validation": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "keyword": {
+                      "type": "string"
+                    },
+                    "dataPath": {
+                      "type": "string"
+                    },
+                    "schemaPath": {
+                      "type": "string"
+                    },
+                    "params": {
+                      "type": "object"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      "ErrorResult": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer"
+          },
+          "message": {
+            "type": "string"
+          },
+          "detail": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "SearchResult": {
+        "type": "object",
+        "properties": {
+          "totalTasks": {
+            "type": "number"
+          },
+          "totalProjects": {
+            "type": "number"
+          },
+          "tasks": {
+            "type": "array",
+            "items": {
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/Task"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "user": {
+                      "$ref": "#/components/schemas/User"
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "projects": {
+            "type": "array",
+            "items": {
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/Project"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "user": {
+                      "$ref": "#/components/schemas/User"
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      },
+      "GroupData": {
+        "type": "object",
+        "properties": {
+          "parentId": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 255
+          },
+          "body": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "Group": {
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "integer"
+              },
+              "createdAt": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "updatedAt": {
+                "type": "string",
+                "format": "date-time"
+              }
+            }
+          },
+          {
+            "$ref": "#/components/schemas/GroupData"
+          }
+        ]
+      },
+      "User": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
+          "username": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "UserDeviceData": {
+        "type": "object",
+        "properties": {
+          "deviceToken": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4096
+          }
+        }
+      },
+      "UserDevice": {
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "integer"
+              },
+              "userId": {
+                "type": "integer"
+              },
+              "createdAt": {
+                "type": "string",
+                "format": "date-time"
+              }
+            }
+          },
+          {
+            "$ref": "#/components/schemas/UserDeviceData"
+          }
+        ]
+      },
+      "ProjectData": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 255
+          },
+          "body": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "Project": {
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "integer"
+              },
+              "userId": {
+                "type": "integer"
+              },
+              "createdAt": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "updatedAt": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "lastActiveAt": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "archivedAt": {
+                "type": "string",
+                "format": "date-time",
+                "nullable": true
+              }
+            }
+          },
+          {
+            "$ref": "#/components/schemas/ProjectData"
+          }
+        ]
+      },
+      "ProjectLabelData": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "priority": {
+            "type": "integer",
+            "nullable": true
+          }
+        }
+      },
+      "ProjectLabel": {
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "integer"
+              },
+              "projectId": {
+                "type": "integer"
+              },
+              "createdAt": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "updatedAt": {
+                "type": "string",
+                "format": "date-time"
+              }
+            }
+          },
+          {
+            "$ref": "#/components/schemas/ProjectLabelData"
+          }
+        ]
+      },
+      "ProjectMilestoneData": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "body": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "ProjectMilestone": {
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "integer"
+              },
+              "projectId": {
+                "type": "integer"
+              },
+              "createdAt": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "updatedAt": {
+                "type": "string",
+                "format": "date-time"
+              }
+            }
+          },
+          {
+            "$ref": "#/components/schemas/ProjectMilestoneData"
+          }
+        ]
+      },
+      "WebhookData": {
+        "type": "object",
+        "properties": {
+          "method": {
+            "type": "string",
+            "nullable": true,
+            "minLength": 1,
+            "maxLength": 255,
+            "enum": [
+              null,
+              "post",
+              "put",
+              "get"
+            ]
+          },
+          "url": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 255,
+            "pattern": "^https?:"
+          },
+          "token": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 255
+          },
+          "headers": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "string"
+            }
+          },
+          "events": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "task:open",
+                "task:close",
+                "task:update",
+                "task:comment"
+              ]
+            },
+            "default": [
+              "task:close"
+            ]
+          }
+        }
+      },
+      "Webhook": {
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "integer"
+              },
+              "projectId": {
+                "type": "integer"
+              },
+              "createdAt": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "updatedAt": {
+                "type": "string",
+                "format": "date-time"
+              }
+            }
+          },
+          {
+            "$ref": "#/components/schemas/WebhookData"
+          }
+        ]
+      },
+      "TaskData": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 255
+          },
+          "body": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "type": "object",
+            "default": {}
+          },
+          "attributes": {
+            "type": "object",
+            "default": {}
+          },
+          "notify": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "email",
+                "push",
+                "sms"
+              ]
+            },
+            "default": [
+              "email",
+              "push"
+            ]
+          },
+          "expiresAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        }
+      },
+      "Task": {
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "integer"
+              },
+              "userId": {
+                "type": "integer"
+              },
+              "createdAt": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "updatedAt": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "lastActiveAt": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "closedAt": {
+                "type": "string",
+                "format": "date-time",
+                "nullable": true
+              }
+            }
+          },
+          {
+            "$ref": "#/components/schemas/TaskData"
+          }
+        ]
+      },
+      "TaskCommentData": {
+        "type": "object",
+        "properties": {
+          "body": {
+            "type": "string",
+            "minLength": 1
+          },
+          "sticky": {
+            "type": "boolean"
+          }
+        }
+      },
+      "TaskComment": {
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "integer"
+              },
+              "taskId": {
+                "type": "integer"
+              },
+              "userId": {
+                "type": "integer"
+              },
+              "createdAt": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "updatedAt": {
+                "type": "string",
+                "format": "date-time"
+              }
+            }
+          },
+          {
+            "$ref": "#/components/schemas/TaskCommentData"
+          }
+        ]
+      },
+      "TaskAttachment": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "taskId": {
+            "type": "integer"
+          },
+          "userId": {
+            "type": "integer"
+          },
+          "filename": {
+            "type": "string"
+          },
+          "hash": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "TaskActionData": {
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string",
+            "enum": [
+              "assign",
+              "close",
+              "remind"
+            ]
+          },
+          "attributes": {
+            "type": "object"
+          },
+          "scheduledAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "TaskAction": {
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "integer"
+              },
+              "taskId": {
+                "type": "integer"
+              },
+              "userId": {
+                "type": "integer"
+              },
+              "createdAt": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "updatedAt": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "processedAt": {
+                "type": "string",
+                "format": "date-time"
+              }
+            }
+          },
+          {
+            "$ref": "#/components/schemas/TaskActionData"
+          }
+        ]
+      },
+      "UserProfile": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/User"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "mobile": {
+                "type": "string",
+                "nullable": true
+              },
+              "locale": {
+                "type": "string",
+                "default": "en"
+              },
+              "sub": {
+                "type": "string"
+              },
+              "roles": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "admin",
+                    "read:project",
+                    "create:project",
+                    "update:project",
+                    "read:task",
+                    "create:task",
+                    "update:task",
+                    "task:comment",
+                    "create:webhook",
+                    "update:webhook"
+                  ]
+                }
+              },
+              "groups": {
+                "type": "array",
+                "items": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Group"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "permission": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  ]
+                }
+              },
+              "devices": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/UserDevice"
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "requestBodies": {
+      "postUserDevice": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/UserDeviceData"
+                },
+                {
+                  "type": "object",
+                  "required": [
+                    "deviceToken"
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      },
+      "putUserProfile": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 255
+                },
+                "mobile": {
+                  "type": "string",
+                  "nullable": true,
+                  "minLength": 1,
+                  "maxLength": 255
+                },
+                "locale": {
+                  "type": "string",
+                  "nullable": true,
+                  "minLength": 1,
+                  "maxLength": 255
+                }
+              }
+            }
+          }
+        }
+      },
+      "putAvatar": {
+        "required": true,
+        "content": {
+          "multipart/form-data": {
+            "schema": {
+              "type": "object",
+              "required": [
+                "avatar"
+              ],
+              "properties": {
+                "avatar": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      },
+      "postGroup": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/GroupData"
+                },
+                {
+                  "type": "object",
+                  "required": [
+                    "name"
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      },
+      "putGroup": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/GroupData"
+            }
+          }
+        }
+      },
+      "postProject": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/ProjectData"
+                },
+                {
+                  "type": "object",
+                  "required": [
+                    "name"
+                  ],
+                  "properties": {
+                    "groups": {
+                      "default": [],
+                      "type": "array",
+                      "items": {
+                        "type": "integer"
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      },
+      "putProject": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/ProjectData"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "groups": {
+                      "default": [],
+                      "type": "array",
+                      "items": {
+                        "type": "integer"
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      },
+      "postWebhook": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/WebhookData"
+                },
+                {
+                  "type": "object",
+                  "required": [
+                    "url",
+                    "token"
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      },
+      "putWebhook": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/WebhookData"
+            }
+          }
+        }
+      },
+      "postProjectLabel": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/ProjectLabelData"
+                },
+                {
+                  "type": "object",
+                  "required": [
+                    "name"
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      },
+      "putProjectLabel": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ProjectLabelData"
+            }
+          }
+        }
+      },
+      "postProjectMilestone": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/ProjectMilestoneData"
+                },
+                {
+                  "type": "object",
+                  "required": [
+                    "name"
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      },
+      "putProjectMilestone": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ProjectMilestoneData"
+            }
+          }
+        }
+      },
+      "postTask": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/TaskData"
+                },
+                {
+                  "type": "object",
+                  "required": [
+                    "name",
+                    "projects"
+                  ],
+                  "properties": {
+                    "projects": {
+                      "default": [],
+                      "type": "array",
+                      "nullable": true,
+                      "minItems": 1,
+                      "maxItems": 10,
+                      "items": {
+                        "type": "integer"
+                      }
+                    },
+                    "labels": {
+                      "default": [],
+                      "type": "array",
+                      "nullable": true,
+                      "items": {
+                        "type": "integer"
+                      }
+                    },
+                    "milestones": {
+                      "default": [],
+                      "type": "array",
+                      "nullable": true,
+                      "items": {
+                        "type": "integer"
+                      }
+                    },
+                    "assignees": {
+                      "default": [],
+                      "type": "array",
+                      "items": {
+                        "type": "integer"
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      },
+      "putTask": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/TaskData"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "projects": {
+                      "default": [],
+                      "type": "array",
+                      "nullable": true,
+                      "items": {
+                        "type": "integer"
+                      }
+                    },
+                    "labels": {
+                      "default": [],
+                      "type": "array",
+                      "nullable": true,
+                      "items": {
+                        "type": "integer"
+                      }
+                    },
+                    "milestones": {
+                      "default": [],
+                      "type": "array",
+                      "nullable": true,
+                      "items": {
+                        "type": "integer"
+                      }
+                    },
+                    "assignees": {
+                      "default": [],
+                      "type": "array",
+                      "items": {
+                        "type": "integer"
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      },
+      "postAttachment": {
+        "required": true,
+        "content": {
+          "multipart/form-data": {
+            "schema": {
+              "type": "object",
+              "required": [
+                "attachment"
+              ],
+              "properties": {
+                "attachment": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      },
+      "postAction": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/TaskActionData"
+                },
+                {
+                  "type": "object",
+                  "required": [
+                    "action",
+                    "scheduledAt"
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      },
+      "putAction": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/TaskActionData"
+            }
+          }
+        }
+      },
+      "postComment": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/TaskCommentData"
+                },
+                {
+                  "type": "object",
+                  "required": [
+                    "body"
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      },
+      "putComment": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/TaskCommentData"
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "204": {
+        "description": "OK (empty response)"
+      },
+      "400": {
+        "description": "Invalid resource",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorResult"
+            }
+          }
+        }
+      },
+      "401": {
+        "description": "Unauthorized",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorResult"
+            }
+          }
+        }
+      },
+      "404": {
+        "description": "Not found",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorResult"
+            }
+          }
+        }
+      },
+      "409": {
+        "description": "The resource was updated after the provided reference timestamp",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorResult"
+            }
+          }
+        }
+      },
+      "422": {
+        "description": "Validation error",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ValidationResult"
+            }
+          }
+        }
+      },
+      "project": {
+        "description": "OK",
+        "content": {
+          "application/json": {
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/Project"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "user": {
+                      "$ref": "#/components/schemas/User"
+                    },
+                    "groups": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Group"
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      },
+      "tasks": {
+        "description": "OK",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/Task"
+              }
+            }
+          }
+        }
+      },
+      "getUser": {
+        "description": "OK",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/User"
+            }
+          }
+        }
+      },
+      "getUserProfile": {
+        "description": "OK",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/UserProfile"
+            }
+          }
+        }
+      },
+      "putUserProfile": {
+        "description": "OK",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/UserProfile"
+            }
+          }
+        }
+      },
+      "postUserDevice": {
+        "description": "OK (Created)",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/UserDevice"
+            }
+          }
+        }
+      },
+      "getGroups": {
+        "description": "OK",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/Group"
+              }
+            }
+          }
+        }
+      },
+      "getGroup": {
+        "description": "OK",
+        "content": {
+          "application/json": {
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/Group"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "parent": {
+                      "$ref": "#/components/schemas/Group"
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      },
+      "getAvatar": {
+        "description": "OK",
+        "content": {
+          "image/png": {
+            "schema": {
+              "type": "string",
+              "format": "binary"
+            }
+          }
+        }
+      },
+      "getProjects": {
+        "description": "OK",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/Project"
+              }
+            }
+          }
+        }
+      },
+      "getWebhooks": {
+        "description": "OK",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Webhook"
+            }
+          }
+        }
+      },
+      "postOrPutWebhook": {
+        "description": "OK",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/Webhook"
+              }
+            }
+          }
+        }
+      },
+      "getMilestones": {
+        "description": "OK",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/ProjectMilestone"
+              }
+            }
+          }
+        }
+      },
+      "getMilestone": {
+        "description": "OK",
+        "content": {
+          "application/json": {
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/ProjectMilestone"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "project": {
+                      "$ref": "#/components/schemas/Project"
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      },
+      "getLabels": {
+        "description": "OK",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/ProjectLabel"
+              }
+            }
+          }
+        }
+      },
+      "postOrPutProjectLabel": {
+        "description": "OK",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ProjectLabel"
+            }
+          }
+        }
+      },
+      "postOrPutProjectMilestone": {
+        "description": "OK",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ProjectMilestone"
+            }
+          }
+        }
+      },
+      "getTask": {
+        "description": "OK",
+        "content": {
+          "application/json": {
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/Task"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "user": {
+                      "$ref": "#/components/schemas/User"
+                    },
+                    "projects": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Project"
+                      }
+                    },
+                    "assignees": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/User"
+                      }
+                    },
+                    "labels": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/ProjectLabel"
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      },
+      "getTaskWatchers": {
+        "description": "OK",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/TaskAttachment"
+              }
+            }
+          }
+        }
+      },
+      "postOrPutTask": {
+        "description": "OK",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Task"
+            }
+          }
+        }
+      },
+      "postAttachment": {
+        "description": "OK (Created)",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/TaskAttachment"
+            }
+          }
+        }
+      },
+      "getAttachments": {
+        "description": "OK",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/TaskAttachment"
+              }
+            }
+          }
+        }
+      },
+      "getAttachment": {
+        "description": "OK",
+        "content": {
+          "application/octet-stream": {
+            "schema": {
+              "type": "string",
+              "format": "binary"
+            }
+          }
+        }
+      },
+      "getActions": {
+        "description": "OK",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/TaskAction"
+              }
+            }
+          }
+        }
+      },
+      "postOrPutAction": {
+        "description": "OK",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/TaskAction"
+            }
+          }
+        }
+      },
+      "getComments": {
+        "description": "OK",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "array",
+              "items": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/TaskComment"
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "user": {
+                        "$ref": "#/components/schemas/User"
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "postOrPutComment": {
+        "description": "OK",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/TaskComment"
+            }
+          }
+        }
+      }
+    },
+    "parameters": {
+      "group": {
+        "name": "group",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "integer"
+        }
+      },
+      "device": {
+        "name": "device",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "integer"
+        }
+      },
+      "user": {
+        "name": "user",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "integer"
+        }
+      },
+      "project": {
+        "name": "project",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "integer"
+        }
+      },
+      "webhook": {
+        "name": "webhook",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "integer"
+        }
+      },
+      "label": {
+        "name": "label",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "integer"
+        }
+      },
+      "milestone": {
+        "name": "milestone",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "integer"
+        }
+      },
+      "task": {
+        "name": "task",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "integer"
+        }
+      },
+      "attachment": {
+        "name": "attachment",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "integer"
+        }
+      },
+      "action": {
+        "name": "action",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "integer"
+        }
+      },
+      "comment": {
+        "name": "comment",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "integer"
+        }
+      },
+      "parentId": {
+        "name": "parentId",
+        "in": "query",
+        "schema": {
+          "type": "string",
+          "pattern": "^\\d+$"
+        }
+      },
+      "download": {
+        "name": "download",
+        "in": "query",
+        "schema": {
+          "type": "string"
+        }
+      },
+      "conflictCheck": {
+        "name": "x-reference-timestamp",
+        "in": "header",
+        "schema": {
+          "type": "string"
+        }
+      },
+      "usersFilter": {
+        "name": "users",
+        "in": "query",
+        "explode": true,
+        "style": "form",
+        "schema": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          }
+        }
+      },
+      "groupsFilter": {
+        "name": "groups",
+        "in": "query",
+        "explode": true,
+        "style": "form",
+        "schema": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          }
+        }
+      },
+      "assignedUserIdsFilter": {
+        "name": "assignedUsers",
+        "in": "query",
+        "explode": true,
+        "style": "form",
+        "schema": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          }
+        }
+      },
+      "milestonesFilter": {
+        "name": "milestones",
+        "in": "query",
+        "explode": true,
+        "style": "form",
+        "schema": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "labelsFilter": {
+        "name": "labels",
+        "in": "query",
+        "explode": true,
+        "style": "form",
+        "schema": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "statusFilter": {
+        "name": "status",
+        "in": "query",
+        "explode": true,
+        "style": "form",
+        "schema": {
+          "default": "all",
+          "type": "string",
+          "enum": [
+            "open",
+            "closed",
+            "all"
+          ]
+        }
+      }
+    },
+    "securitySchemes": {
+      "jwt": {
+        "type": "http",
+        "description": "HTTP JWT Bearer Token",
+        "scheme": "bearer"
+      },
+      "auth0": {
+        "type": "oauth2",
+        "description": "Auth0 Security Token",
+        "flows": {
+          "implicit": {
+            "authorizationUrl": "https://os-js.eu.auth0.com/authorize?audience=https://api.prudentide.local",
+            "refreshUrl": "https://os-js.eu.auth0.com/oauth/token",
+            "scopes": {
+              "openid": "User profile",
+              "email": "Email address"
+            }
+          },
+          "clientCredentials": {
+            "tokenUrl": "https://os-js.eu.auth0.com/oauth/token",
+            "refreshUrl": "https://os-js.eu.auth0.com/oauth/token",
+            "scopes": {
+              "openid": "User profile",
+              "email": "Email address"
+            }
+          }
+        }
+      }
+    }
+  },
+  "x-tagGroups": [
+    {
+      "name": "User",
+      "tags": [
+        "me",
+        "user"
+      ]
+    },
+    {
+      "name": "General",
+      "tags": [
+        "project",
+        "project label",
+        "project milestone",
+        "project webhook",
+        "task",
+        "task watcher",
+        "task attachment",
+        "task comment",
+        "search"
+      ]
+    },
+    {
+      "name": "Admin",
+      "tags": [
+        "group"
+      ]
+    },
+    {
+      "name": "Misc",
+      "tags": [
+        "health"
+      ]
+    }
+  ]
+}

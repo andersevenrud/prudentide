@@ -1,0 +1,82 @@
+version: '3'
+
+x-common: &common
+  restart: no
+
+x-prudentide: &prudentide
+  image: "prudentide:latest"
+  working_dir: /usr/src/prudentide
+  environment:
+    NODE_ENV: production
+    APP_PORT: 8080
+    MAIL_FROM: prudentide@localhost
+    WINSTON_LOGLEVEL:
+    AUTH0_DOMAIN: http://example.com
+    FIREBASE_DATABASE_URL: https://project-name.firebaseio.com
+    GOOGLE_APPLICATION_CREDENTIALS: /usr/src/prudentide/configs/service-account-file.json
+    CACHE_ENABLED: false
+    SENTRY_DSN: ""
+  volumes:
+    - "./configs:/usr/src/prudentide/configs:ro"
+    - "storage_data:/usr/src/prudentide/storage"
+
+services:
+  db:
+    image: "mysql:8"
+    command: --default-authentication-plugin=mysql_native_password
+    volumes:
+      - db_data:/var/lib/mysql:rw
+    environment:
+      MYSQL_ROOT_PASSWORD: prudentide
+      MYSQL_DATABASE: prudentide
+      MYSQL_USER: prudentide
+      MYSQL_PASSWORD: prudentide
+      MYSQL_ROOT_HOST: '%'
+    <<: *common
+
+  mq:
+    image: "redis:latest"
+    volumes:
+      - redis_data:/data
+    <<: *common
+
+  cache:
+    image: "redis:latest"
+    <<: *common
+
+  mailhog:
+    image: mailhog/mailhog
+    ports:
+      - 8081:8025
+    logging:
+      driver: none
+
+  jobs:
+    command: node bin/processQueues.mjs
+    depends_on:
+      - db
+      - mq
+      - mailhog
+    environment:
+      WINSTON_SERVICE: jobs
+    <<: *prudentide
+    <<: *common
+
+  api:
+    command: node bin/api.mjs
+    depends_on:
+      - db
+      - mq
+      - cache
+      - mailhog
+    environment:
+      WINSTON_SERVICE: api
+    ports:
+      - 8080:8080
+    <<: *prudentide
+    <<: *common
+
+volumes:
+  db_data: {}
+  redis_data: {}
+  storage_data: {}
